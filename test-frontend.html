@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test - Crypto Trading Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .test-button {
+            background: linear-gradient(45deg, #bb86fc, #6200ea);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4caf50;
+        }
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+        }
+        .pending {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid #ffc107;
+        }
+        .logo {
+            text-align: center;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="logo">🐼</div>
+        <h1 style="text-align: center;">Crypto Trading Platform - Frontend Test</h1>
+        
+        <div class="test-section">
+            <h2>🔍 Step 1: Frontend Server Status</h2>
+            <button class="test-button" onclick="testFrontendServer()">Test Frontend Server</button>
+            <div id="frontend-status" class="status pending">Click button to test...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Step 2: Backend API Status</h2>
+            <button class="test-button" onclick="testBackendAPI()">Test Backend API</button>
+            <div id="backend-status" class="status pending">Click button to test...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>👤 Step 3: Registration Test</h2>
+            <button class="test-button" onclick="testRegistration()">Test User Registration</button>
+            <div id="registration-status" class="status pending">Click button to test...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔐 Step 4: Login Test</h2>
+            <button class="test-button" onclick="testLogin()">Test User Login</button>
+            <div id="login-status" class="status pending">Click button to test...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>🚀 Step 5: Complete Flow Test</h2>
+            <p><strong>Manual Steps:</strong></p>
+            <ol>
+                <li>Open <a href="http://localhost:3000" target="_blank" style="color: #bb86fc;">http://localhost:3000</a></li>
+                <li>Verify login page shows with animated panda 🐼</li>
+                <li>Check that password fields are VISIBLE when typing (no asterisks)</li>
+                <li>Click "Register" tab to create new account</li>
+                <li>Fill form and register</li>
+                <li>Login with new account</li>
+                <li>Verify dashboard loads with "Advanced Crypto Trading with AI Predictions & Technical Analysis"</li>
+            </ol>
+            <button class="test-button" onclick="openApp()">Open App in New Tab</button>
+        </div>
+
+        <div class="test-section">
+            <h2>✅ Test Summary</h2>
+            <div id="test-summary">
+                <p>📋 <strong>Requirements Checklist:</strong></p>
+                <div id="checklist">
+                    <p>⏳ Username and password clearly visible when typing</p>
+                    <p>⏳ Login page connects to backend after authentication</p>
+                    <p>⏳ Registration option available for new users</p>
+                    <p>⏳ Dashboard shows clear top sentence</p>
+                    <p>⏳ Full end-to-end flow working</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            frontend: false,
+            backend: false,
+            registration: false,
+            login: false
+        };
+
+        async function testFrontendServer() {
+            const statusEl = document.getElementById('frontend-status');
+            statusEl.innerHTML = '⏳ Testing frontend server...';
+            statusEl.className = 'status pending';
+
+            try {
+                const response = await fetch('http://localhost:3000');
+                if (response.ok) {
+                    statusEl.innerHTML = '✅ Frontend server is running on port 3000';
+                    statusEl.className = 'status success';
+                    testResults.frontend = true;
+                } else {
+                    throw new Error('Server responded with error');
+                }
+            } catch (error) {
+                statusEl.innerHTML = '❌ Frontend server is not accessible. Please start the React development server.';
+                statusEl.className = 'status error';
+            }
+            updateSummary();
+        }
+
+        async function testBackendAPI() {
+            const statusEl = document.getElementById('backend-status');
+            statusEl.innerHTML = '⏳ Testing backend API...';
+            statusEl.className = 'status pending';
+
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    statusEl.innerHTML = '✅ Backend API is running on port 5000';
+                    statusEl.className = 'status success';
+                    testResults.backend = true;
+                } else {
+                    throw new Error('API responded with error');
+                }
+            } catch (error) {
+                statusEl.innerHTML = '❌ Backend API is not accessible. Please start the Node.js server.';
+                statusEl.className = 'status error';
+            }
+            updateSummary();
+        }
+
+        async function testRegistration() {
+            const statusEl = document.getElementById('registration-status');
+            statusEl.innerHTML = '⏳ Testing user registration...';
+            statusEl.className = 'status pending';
+
+            const testUser = {
+                username: 'testuser' + Date.now(),
+                email: 'test' + Date.now() + '@example.com',
+                password: 'testpass123',
+                firstName: 'Test',
+                lastName: 'User'
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    statusEl.innerHTML = '✅ User registration successful! User created with ₹10 crore balance.';
+                    statusEl.className = 'status success';
+                    testResults.registration = true;
+                    window.testUserEmail = testUser.email;
+                    window.testUserPassword = testUser.password;
+                } else {
+                    throw new Error(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                statusEl.innerHTML = '❌ Registration failed: ' + error.message;
+                statusEl.className = 'status error';
+            }
+            updateSummary();
+        }
+
+        async function testLogin() {
+            const statusEl = document.getElementById('login-status');
+            statusEl.innerHTML = '⏳ Testing user login...';
+            statusEl.className = 'status pending';
+
+            if (!window.testUserEmail) {
+                statusEl.innerHTML = '❌ Please run registration test first';
+                statusEl.className = 'status error';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        emailOrUsername: window.testUserEmail,
+                        password: window.testUserPassword
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    statusEl.innerHTML = '✅ Login successful! Backend authentication working properly.';
+                    statusEl.className = 'status success';
+                    testResults.login = true;
+                } else {
+                    throw new Error(data.message || 'Login failed');
+                }
+            } catch (error) {
+                statusEl.innerHTML = '❌ Login failed: ' + error.message;
+                statusEl.className = 'status error';
+            }
+            updateSummary();
+        }
+
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        function updateSummary() {
+            const checklist = document.getElementById('checklist');
+            const allPassed = testResults.frontend && testResults.backend && testResults.registration && testResults.login;
+            
+            checklist.innerHTML = `
+                <p>${testResults.frontend ? '✅' : '⏳'} Frontend server accessible</p>
+                <p>${testResults.backend ? '✅' : '⏳'} Backend API functional</p>
+                <p>${testResults.registration ? '✅' : '⏳'} User registration working</p>
+                <p>${testResults.login ? '✅' : '⏳'} User login working</p>
+                <p>⏳ Manual UI testing required for password visibility and dashboard</p>
+                ${allPassed ? '<p style="color: #4caf50; font-weight: bold;">🎉 All automated tests passed! Please complete manual testing.</p>' : ''}
+            `;
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testFrontendServer();
+                setTimeout(() => testBackendAPI(), 1000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
